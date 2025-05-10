@@ -8,7 +8,7 @@ class Violation extends Model
 {
     protected $fillable = [
         'vehicle_id', 'violation_date', 'violation_type', 'fine_amount', 'location',
-        'payment_status', 'payment_method'
+        'evidence_image', 'payment_status', 'payment_method'
     ];
 
     public function vehicle()

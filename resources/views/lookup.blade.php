@@ -13,11 +13,13 @@
             margin-bottom: 30px;
             margin-top: 20px;
         }
+
         .banner h1 {
             font-size: 2rem;
             font-weight: bold;
             margin-bottom: 20px;
         }
+
         .search-form {
             background-color: white;
             padding: 20px;
@@ -26,14 +28,17 @@
             max-width: 400px;
             margin: 0 auto;
         }
+
         .search-form .form-label {
             color: #0056b3;
             font-weight: bold;
         }
+
         .search-form .form-control {
             border-radius: 5px;
             margin-bottom: 10px;
         }
+
         .search-form .btn-search {
             background: linear-gradient(90deg, #0056b3, #00aaff);
             color: white;
@@ -43,16 +48,45 @@
             width: 100%;
             font-weight: bold;
         }
+
         .search-form .btn-search:hover {
             background: linear-gradient(90deg, #004494, #0088cc);
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4);
         }
+
         .result-section {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .table {
+            font-size: 14px;
+        }
+
+        .badge {
+            padding: 5px 8px;
+        }
+
+        .alert-info {
+            margin-top: 15px;
+        }
+        .modal-body img {
+            max-width: 100%;
+            max-height: 80vh; /* 80% chiều cao màn hình */
+        }
+        .img-thumbnail {
+            transition: transform 0.2s;
+        }
+        .img-thumbnail:hover {
+            transform: scale(1.05);
+            cursor: pointer;
         }
     </style>
 @endsection
@@ -65,13 +99,15 @@
             <form method="GET" action="{{ route('lookup') }}">
                 <div class="mb-3">
                     <label for="licensePlate" class="form-label">Nhập biển số xe</label>
-                    <input type="text" class="form-control" id="licensePlate" name="license_plate" placeholder="Ví dụ: 51H-123.45" value="{{ $licensePlate ?? '' }}">
+                    <input type="text" class="form-control" id="licensePlate" name="license_plate"
+                        placeholder="Ví dụ: 51H-123.45" value="{{ $licensePlate ?? '' }}">
                 </div>
                 <button type="submit" class="btn btn-search">Tra cứu</button>
             </form>
         </div>
     </div>
 
+    <!-- Result Section -->
     <!-- Result Section -->
     @if($vehicle)
         <div class="row justify-content-center">
@@ -80,11 +116,73 @@
                     <h5>Kết quả tra cứu</h5>
                     <hr>
                     <p><strong>Biển số xe:</strong> {{ $vehicle->license_plate }}</p>
-                    <p><strong>Chủ phương tiện:</strong> {{ $vehicle->owner_name }}</p>
-                    @if($latestViolation)
-                        <p><strong>Lần vi phạm gần nhất:</strong> {{ \Carbon\Carbon::parse($latestViolation->violation_date)->format('d/m/Y') }}</p>
-                        <p><strong>Mức phạt:</strong> {{ number_format($latestViolation->fine_amount) }} VNĐ</p>
-                        <p><strong>Chi tiết vi phạm:</strong> {{ $latestViolation->violation_type }} tại {{ $latestViolation->location }}</p>
+                    <p><strong>Chủ phương tiện:</strong> {{ $vehicle->owner->name }}</p>
+
+                    @if($violations && count($violations) > 0)
+                        <h6>Lịch sử vi phạm:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Ngày vi phạm</th>
+                                        <th>Loại vi phạm</th>
+                                        <th>Địa điểm</th>
+                                        <th>Mức phạt</th>
+                                        <th>Trạng thái</th>
+                                        <th>Minh chứng</th> <!-- Thêm cột này -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($violations as $violation)
+                                        <tr>
+                                            <td>{{ \Carbon\Carbon::parse($violation->violation_date)->format('d/m/Y') }}</td>
+                                            <td>{{ $violation->violation_type }}</td>
+                                            <td>{{ $violation->location }}</td>
+                                            <td>{{ number_format($violation->fine_amount) }} VNĐ</td>
+                                            <td>
+                                                @if($violation->payment_status == 'Paid')
+                                                    <span class="badge bg-success">Đã thanh toán</span>
+                                                @else
+                                                    <span class="badge bg-danger">Chưa thanh toán</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($violation->evidence_image)
+                                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal{{ $violation->id }}">
+                                                        Xem ảnh
+                                                    </button>
+                                                    
+                                                    <!-- Modal hiển thị ảnh -->
+                                                    <div class="modal fade" id="imageModal{{ $violation->id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $violation->id }}" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="imageModalLabel{{ $violation->id }}">Ảnh minh chứng vi phạm ngày {{ \Carbon\Carbon::parse($violation->violation_date)->format('d/m/Y') }}</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body text-center">
+                                                                    <img src="{{ asset($violation->evidence_image) }}" alt="Ảnh minh chứng vi phạm" class="img-fluid">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <span class="text-muted">Không có</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info">
+                            @php
+                                $unpaidViolations = $violations->where('payment_status', '!=', 'Paid');
+                                $totalUnpaidAmount = $unpaidViolations->sum('fine_amount');
+                            @endphp
+                            <strong>Tổng số lần vi phạm:</strong> {{ count($violations) }} |
+                            <strong>Tổng tiền phạt chưa thanh toán:</strong> {{ number_format($totalUnpaidAmount) }} VNĐ
+                        </div>
                     @else
                         <p><strong>Không có vi phạm nào.</strong></p>
                     @endif

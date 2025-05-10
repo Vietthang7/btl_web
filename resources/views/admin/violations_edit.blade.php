@@ -65,6 +65,23 @@
                         <label for="location" class="form-label">Địa điểm</label>
                         <input type="text" class="form-control" id="location" name="location" value="{{ old('location', $violation->location) }}" required>
                     </div>
+                    <!-- Thêm trường upload ảnh minh chứng sau trường location -->
+                      <!-- Trường upload ảnh minh chứng mới -->
+                      <div class="col-md-6 mb-3">
+                          <label for="evidence_image" class="form-label">Ảnh minh chứng</label>
+                          <input type="file" class="form-control" id="evidence_image" name="evidence_image" accept="image/*">
+                          <small class="text-muted">Để trống nếu không muốn thay đổi ảnh.</small>
+                      </div>
+
+                      <!-- Hiển thị ảnh minh chứng hiện tại nếu có -->
+                      @if($violation->evidence_image)
+                      <div class="col-md-6 mb-3">
+                          <label class="form-label">Ảnh minh chứng hiện tại:</label>
+                          <div>
+                              <img src="{{ asset($violation->evidence_image) }}" alt="Ảnh minh chứng vi phạm" class="img-thumbnail" style="max-width: 200px;">
+                          </div>
+                      </div>
+                      @endif
                     
                     <div class="col-md-6 mb-3">
                         <label for="payment_status" class="form-label">Trạng thái thanh toán</label>
