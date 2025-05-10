@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
-    protected $fillable = ['license_plate', 'owner_name', 'vehicle_type'];
+    protected $fillable = ['license_plate', 'type', 'brand', 'model', 'owner_id'];
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
 
     public function violations()
     {
