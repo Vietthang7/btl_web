@@ -12,7 +12,7 @@ class CreateVehiclesTable extends Migration
             $table->id();
             $table->string('license_plate', 20)->unique();
             $table->string('owner_name', 100);
-            $table->string('vehicle_type', 50);
+            $table->string('type', 50);
             $table->timestamps();
         });
     }

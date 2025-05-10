@@ -9,7 +9,7 @@ class AddColumnsToVehiclesTable extends Migration
     public function up()
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->string('type')->default('Car'); // Ô tô, Xe máy
+            // $table->string('type')->default('Car'); // Ô tô, Xe máy
             $table->string('brand')->nullable(); // Hãng xe
             $table->string('model')->nullable(); // Mẫu xe
             $table->unsignedBigInteger('owner_id')->nullable();
