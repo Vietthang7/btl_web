@@ -119,3 +119,10 @@
         </div>
     </div>
 @endsection
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="Hỗ_trợ_người_dùng"
+  agent-id="e9e2ddfe-471d-4b3a-8562-3339780d54d1"
+  language-code="vi"
+></df-messenger>
