@@ -59,6 +59,8 @@
             border-radius: 50px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.4s ease;
+            background-color: white;
+            color: #0056b3;
         }
         
         .hero-banner .btn-lookup:hover {
@@ -263,12 +265,65 @@
             -webkit-box-orient: vertical;
         }
         
+        /* Thiết kế lại nút "Xem chi tiết" */
         .news-section .btn-detail {
             align-self: flex-start;
-            padding: 10px 25px;
+            padding: 12px 28px;
             border-radius: 50px;
             font-weight: 600;
             font-size: 1rem;
+            background: linear-gradient(135deg, #0056b3, #00aaff);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .news-section .btn-detail .btn-text {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .news-section .btn-detail .arrow {
+            margin-left: 6px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            display: inline-flex;
+        }
+        
+        .news-section .btn-detail:hover {
+            background: linear-gradient(135deg, #004494, #0088cc);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 86, 179, 0.4);
+        }
+        
+        .news-section .btn-detail:hover .arrow {
+            transform: translateX(5px);
+        }
+        
+        .news-section .btn-detail::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0) 100%);
+            transition: all 0.8s ease;
+        }
+        
+        .news-section .btn-detail:hover::before {
+            left: 100%;
         }
         
         /* FAQ section */
@@ -314,35 +369,44 @@
             --df-messenger-send-icon: #0056b3;
             --df-messenger-user-message: #00aaff;
         }
+        
+        /* AOS durumptions override */
+        [data-aos] {
+            pointer-events: auto !important;
+        }
+        
+        [data-aos="fade-up"] {
+            transform: translate3d(0, 30px, 0);
+        }
     </style>
 @endsection
 
 @section('content')
     <!-- Hero Banner -->
-    <div class="hero-banner">
+    <div class="hero-banner" data-aos="fade-up">
         <div class="container">
-            <h1 class="mb-4">TRA CỨU VI PHẠM GIAO THÔNG</h1>
-            <p class="mb-5">Kiểm tra thông tin vi phạm giao thông của phương tiện chỉ với vài bước đơn giản. Hệ thống cung cấp dữ liệu chính xác và cập nhật liên tục.</p>
-            <a href="{{ route('lookup') }}" class="btn btn-lookup">
-                <i class="fas fa-search me-2"></i> TRA CỨU NGAY
+            <h1 class="mb-4" data-aos="fade-up" data-aos-delay="100">TRA CỨU VI PHẠM GIAO THÔNG</h1>
+            <p class="mb-5" data-aos="fade-up" data-aos-delay="200">Kiểm tra thông tin vi phạm giao thông của phương tiện chỉ với vài bước đơn giản. Hệ thống cung cấp dữ liệu chính xác và cập nhật liên tục.</p>
+            <a href="{{ route('lookup') }}" class="btn btn-lookup" data-aos="zoom-in" data-aos-delay="300">
+                <i class="bi bi-search me-2"></i> TRA CỨU NGAY
             </a>
         </div>
     </div>
 
     <!-- Statistics Section -->
-    <div class="section-container statistics-section">
-        <h2 class="section-heading">Thống Kê Vi Phạm</h2>
+    <div class="section-container statistics-section" data-aos="fade-up">
+        <h2 class="section-heading" data-aos="fade-up">Thống Kê Vi Phạm</h2>
         <div class="row">
             <!-- Row 1: Hai card đầu tiên -->
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4" data-aos="fade-right" data-aos-delay="100">
                 <div class="card h-100">
                     <div class="card-header">
-                        <i class="fas fa-car me-2"></i> Loại xe vi phạm nhiều nhất
+                        <i class="bi bi-car-front me-2"></i> Loại xe vi phạm nhiều nhất
                     </div>
                     <div class="card-body d-flex flex-column justify-content-center align-items-center">
                         @if(isset($mostViolatedVehicleType))
-                            <h3 class="stat-value">{{ $mostViolatedVehicleType->type }}</h3>
-                            <p class="text-center">Với {{ number_format($mostViolatedVehicleType->violation_count) }} vi phạm</p>
+                            <h3 class="stat-value" data-aos="zoom-in" data-aos-delay="200">{{ $mostViolatedVehicleType->type }}</h3>
+                            <p class="text-center" data-aos="fade-up" data-aos-delay="250">Với {{ number_format($mostViolatedVehicleType->violation_count) }} vi phạm</p>
                         @else
                             <p class="text-center">Không có dữ liệu</p>
                         @endif
@@ -350,15 +414,15 @@
                 </div>
             </div>
 
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4" data-aos="fade-left" data-aos-delay="100">
                 <div class="card h-100">
                     <div class="card-header">
-                        <i class="fas fa-exclamation-triangle me-2"></i> Top 3 lỗi vi phạm phổ biến
+                        <i class="bi bi-exclamation-triangle me-2"></i> Top 3 lỗi vi phạm phổ biến
                     </div>
                     <div class="card-body">
                         <ul class="list-unstyled top-violations">
                             @forelse($topViolationTypes as $index => $violation)
-                                <li>
+                                <li data-aos="fade-left" data-aos-delay="{{ 200 + ($index * 100) }}">
                                     <div class="violation-type">
                                         <strong>{{ $index + 1 }}. </strong>{{ $violation->violation_type }}
                                     </div>
@@ -373,10 +437,10 @@
             </div>
 
             <!-- Row 2: Biểu đồ -->
-            <div class="col-12">
+            <div class="col-12" data-aos="zoom-in" data-aos-delay="200">
                 <div class="card">
                     <div class="card-header">
-                        <i class="fas fa-chart-bar me-2"></i> Số lượng vi phạm theo tháng năm {{ date('Y') }}
+                        <i class="bi bi-bar-chart-line me-2"></i> Số lượng vi phạm theo tháng năm {{ date('Y') }}
                     </div>
                     <div class="card-body">
                         <div class="chart-container">
@@ -389,23 +453,23 @@
     </div>
 
     <!-- Traffic Situation Section -->
-    <div class="section-container traffic-section">
-        <h2 class="section-heading">Tình Hình Giao Thông</h2>
+    <div class="section-container traffic-section" data-aos="fade-up">
+        <h2 class="section-heading" data-aos="fade-up">Tình Hình Giao Thông</h2>
         <div class="row">
-            @forelse($trafficSituations as $situation)
-                <div class="col-md-6 mb-3">
+            @forelse($trafficSituations as $index => $situation)
+                <div class="col-md-6 mb-3" data-aos="fade-up" data-aos-delay="{{ 100 + ($index * 50) }}">
                     <div class="traffic-situation-item">
                         <div class="location">{{ $situation->location }}, {{ $situation->city }}</div>
                         <div class="status">{{ $situation->status }}</div>
                         <div class="time">
-                            <i class="far fa-clock me-1"></i> Cập nhật: {{ $situation->updated_at->format('d/m/Y H:i') }}
+                            <i class="bi bi-clock me-1"></i> Cập nhật: {{ $situation->updated_at->format('d/m/Y H:i') }}
                         </div>
                     </div>
                 </div>
             @empty
-                <div class="col-12">
+                <div class="col-12" data-aos="fade-up">
                     <div class="text-center py-4">
-                        <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                        <i class="bi bi-info-circle fa-3x text-muted mb-3"></i>
                         <p>Không có thông tin tình hình giao thông.</p>
                     </div>
                 </div>
@@ -414,11 +478,11 @@
     </div>
 
     <!-- News Section -->
-    <div class="section-container news-section">
-        <h2 class="section-heading">Tin Tức Giao Thông</h2>
+    <div class="section-container news-section" data-aos="fade-up">
+        <h2 class="section-heading" data-aos="fade-up">Tin Tức Giao Thông</h2>
         <div class="row">
-            @foreach($news as $item)
-                <div class="col-md-4 mb-4">
+            @foreach($news as $index => $item)
+                <div class="col-md-4 mb-4" data-aos="flip-up" data-aos-delay="{{ 100 + ($index * 100) }}">
                     <div class="card h-100">
                         <div class="card-img-container">
                             <img src="{{ asset('assets/img/' . $item['image']) }}" class="card-img-top" alt="{{ $item['title'] }}">
@@ -426,8 +490,8 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $item['title'] }}</h5>
                             <p class="card-text">{{ $item['description'] }}</p>
-                            <a href="#" class="btn btn-detail">
-                                <i class="fas fa-angle-right me-1"></i> Xem chi tiết
+                            <a href="#" class="btn btn-detail" data-aos="zoom-in" data-aos-delay="50" data-aos-anchor-placement="top-bottom">
+                                <span class="btn-text">Xem chi tiết <span class="arrow"><i class="bi bi-chevron-right"></i></span></span>
                             </a>
                         </div>
                     </div>
@@ -437,18 +501,18 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="section-container faq-section">
-        <h2 class="section-heading">Câu Hỏi Thường Gặp</h2>
+    <div class="section-container faq-section" data-aos="fade-up">
+        <h2 class="section-heading" data-aos="fade-up">Câu Hỏi Thường Gặp</h2>
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-10" data-aos="fade-up" data-aos-delay="100">
                 <div class="accordion" id="faqAccordion">
                     @foreach($faqs as $index => $faq)
-                        <div class="accordion-item">
+                        <div class="accordion-item" data-aos="fade-up" data-aos-delay="{{ 150 + ($index * 100) }}">
                             <h2 class="accordion-header" id="faq{{ $index }}">
                                 <button class="accordion-button {{ $index === 0 ? '' : 'collapsed' }}" type="button"
                                     data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}"
                                     aria-expanded="{{ $index === 0 ? 'true' : 'false' }}">
-                                    <i class="fas fa-question-circle me-2"></i> {{ $faq['question'] }}
+                                    <i class="bi bi-question-circle me-2"></i> {{ $faq['question'] }}
                                 </button>
                             </h2>
                             <div id="collapse{{ $index }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
@@ -466,9 +530,6 @@
 @endsection
 
 @section('scripts')
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -547,6 +608,11 @@
                     }
                 }
             });
+            
+            // Khởi tạo lại AOS sau khi tất cả nội dung đã được tải
+            setTimeout(function() {
+                AOS.refresh();
+            }, 500);
         });
     </script>
 @endsection

@@ -53,12 +53,12 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             position: relative;
             z-index: 1;
-            transform: translateY(0);
-            transition: all 0.4s ease;
+            /* Thay đổi: Xóa transform và thêm margin cho hover */
+            transition: box-shadow 0.4s ease;
         }
         
         .search-container:hover {
-            transform: translateY(-5px);
+            /* Thay đổi: Chỉ giữ box-shadow, bỏ transform */
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
         
@@ -100,12 +100,13 @@
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            /* Thay đổi: Chỉ giữ màu nền và box-shadow transition */
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
         
         .search-form .btn-search:hover {
             background: linear-gradient(90deg, #004494, #0088cc);
-            transform: scale(1.02);
+            /* Thay đổi: Bỏ transform */
             box-shadow: 0 8px 20px rgba(0, 86, 179, 0.4);
         }
         
@@ -116,12 +117,13 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             margin-bottom: 40px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            /* Thay đổi: Chỉ giữ box-shadow transition */
+            transition: box-shadow 0.3s ease;
         }
         
         .result-container:hover {
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            transform: translateY(-5px);
+            /* Thay đổi: Bỏ transform */
         }
         
         .result-header {
@@ -259,13 +261,15 @@
             padding: 8px 15px;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.3s ease;
+            /* Thay đổi: Chỉ giữ lại background và color transition */
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .btn-view-image:hover {
             background: linear-gradient(90deg, #004494, #0088cc);
             color: white;
-            transform: translateY(-2px);
+            /* Thay đổi: Bỏ transform, thêm padding-bottom */
+            padding-bottom: 8px; /* Giữ kích thước không đổi */
             box-shadow: 0 5px 12px rgba(0, 86, 179, 0.3);
         }
         
@@ -278,19 +282,29 @@
             font-weight: 600;
             font-size: 1.1rem;
             margin-top: 20px;
-            transition: all 0.3s ease;
+            /* Thay đổi: Chỉ giữ lại background transition */
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
         
         .btn-pay-all:hover {
             background: linear-gradient(90deg, #c82333, #e95f70);
-            transform: translateY(-3px);
+            /* Thay đổi: Bỏ transform */
             box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
         }
         
         /* Modal styling */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
         .modal-content {
             border-radius: 16px;
             overflow: hidden;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
         }
         
         .modal-header {
@@ -304,13 +318,44 @@
             font-weight: 600;
         }
         
+        /* Điều chỉnh button close */
+        .modal-header .btn-close {
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            margin: 0;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-header .btn-close:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
         .modal-body {
             padding: 30px;
+            text-align: center;
         }
         
         .modal-footer {
             border-top: 1px solid #eaeaea;
             padding: 15px 20px;
+        }
+        
+        /* Image trong modal */
+        .modal-body img.modal-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            /* Thay đổi: Bỏ transition */
+        }
+        
+        /* Fix transform scale issue */
+        .modal-open .modal {
+            overflow-x: hidden;
+            overflow-y: auto;
+            z-index: 2000;
         }
         
         /* Empty state */
@@ -331,13 +376,9 @@
             margin-bottom: 0;
         }
         
-        /* Image hover effect */
-        .modal-img {
-            transition: transform 0.5s ease;
-        }
-        
-        .modal-img:hover {
-            transform: scale(1.05);
+        /* Chatbot styling */
+        df-messenger {
+            z-index: 1000 !important;
         }
 
         /* Responsive adjustments */
@@ -359,6 +400,21 @@
                 padding: 6px 10px;
                 font-size: 0.8rem;
             }
+            
+            /* Điều chỉnh modal trên mobile */
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+        }
+        
+        /* Thêm: Fix stable cho các container */
+        .card, .result-container, .search-container {
+            height: auto;
+            min-height: auto;
+            /* Tránh thay đổi kích thước đột ngột */
+            will-change: box-shadow;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
     </style>
 @endsection
@@ -372,16 +428,16 @@
                 <form method="GET" action="{{ route('lookup') }}" class="search-form">
                     <div class="mb-4">
                         <label for="licensePlate" class="form-label">
-                            <i class="fas fa-car me-2"></i> Nhập biển số xe
+                            <i class="bi bi-car-front me-2"></i> Nhập biển số xe
                         </label>
                         <input type="text" class="form-control" id="licensePlate" name="license_plate"
                             placeholder="Ví dụ: 51H-123.45" value="{{ $licensePlate ?? '' }}">
                         <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i> Nhập đúng định dạng biển số xe (bao gồm cả dấu gạch ngang)
+                            <i class="bi bi-info-circle me-1"></i> Nhập đúng định dạng biển số xe (bao gồm cả dấu gạch ngang)
                         </div>
                     </div>
                     <button type="submit" class="btn btn-search">
-                        <i class="fas fa-search me-2"></i> Tra cứu
+                        <i class="bi bi-search me-2"></i> Tra cứu
                     </button>
                 </form>
             </div>
@@ -394,16 +450,16 @@
             <div class="col-md-10">
                 <div class="result-container">
                     <div class="result-header">
-                        <h5><i class="fas fa-clipboard-check me-2"></i> Kết quả tra cứu</h5>
+                        <h5><i class="bi bi-clipboard-check me-2"></i> Kết quả tra cứu</h5>
                     </div>
                     <div class="result-body">
                         <div class="vehicle-info">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p><strong><i class="fas fa-car me-2"></i>Biển số xe:</strong> {{ $vehicle->license_plate }}</p>
+                                    <p><strong><i class="bi bi-car-front me-2"></i>Biển số xe:</strong> {{ $vehicle->license_plate }}</p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong><i class="fas fa-user me-2"></i>Chủ phương tiện:</strong> {{ $vehicle->owner->name }}</p>
+                                    <p><strong><i class="bi bi-person-fill me-2"></i>Chủ phương tiện:</strong> {{ $vehicle->owner->name }}</p>
                                 </div>
                             </div>
                         </div>
@@ -433,11 +489,11 @@
                                                     <td>
                                                         @if($violation->payment_status == 'Paid')
                                                             <span class="badge bg-success">
-                                                                <i class="fas fa-check-circle me-1"></i> Đã thanh toán
+                                                                <i class="bi bi-check-circle-fill me-1"></i> Đã thanh toán
                                                             </span>
                                                         @else
                                                             <span class="badge bg-danger">
-                                                                <i class="fas fa-times-circle me-1"></i> Chưa thanh toán
+                                                                <i class="bi bi-x-circle-fill me-1"></i> Chưa thanh toán
                                                             </span>
                                                         @endif
                                                     </td>
@@ -445,7 +501,7 @@
                                                         @if($violation->evidence_image)
                                                             <button type="button" class="btn btn-view-image" data-bs-toggle="modal"
                                                                 data-bs-target="#imageModal{{ $violation->id }}">
-                                                                <i class="fas fa-image me-1"></i> Xem
+                                                                <i class="bi bi-image me-1"></i> Xem
                                                             </button>
 
                                                             <!-- Modal hiển thị ảnh -->
@@ -455,13 +511,11 @@
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title" id="imageModalLabel{{ $violation->id }}">
-                                                                                <i class="fas fa-camera me-2"></i>
+                                                                                <i class="bi bi-camera-fill me-2"></i>
                                                                                 Ảnh minh chứng vi phạm - {{ \Carbon\Carbon::parse($violation->violation_date)->format('d/m/Y') }}
                                                                             </h5>
-                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                                aria-label="Close"></button>
                                                                         </div>
-                                                                        <div class="modal-body text-center">
+                                                                        <div class="modal-body">
                                                                             <img src="{{ asset($violation->evidence_image) }}"
                                                                                 alt="Ảnh minh chứng vi phạm" class="img-fluid modal-img">
                                                                         </div>
@@ -472,7 +526,7 @@
                                                                 </div>
                                                             </div>
                                                         @else
-                                                            <span class="text-muted"><i class="fas fa-ban me-1"></i> Không có</span>
+                                                            <span class="text-muted"><i class="bi bi-ban me-1"></i> Không có</span>
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -490,10 +544,10 @@
                                 @endphp
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong><i class="fas fa-exclamation-circle me-2"></i>Tổng số lần vi phạm:</strong> {{ count($violations) }}</p>
+                                        <p><strong><i class="bi bi-exclamation-circle-fill me-2"></i>Tổng số lần vi phạm:</strong> {{ count($violations) }}</p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong><i class="fas fa-money-bill-wave me-2"></i>Tổng tiền phạt chưa thanh toán:</strong> {{ number_format($totalUnpaidAmount) }} VNĐ</p>
+                                        <p><strong><i class="bi bi-currency-exchange me-2"></i>Tổng tiền phạt chưa thanh toán:</strong> {{ number_format($totalUnpaidAmount) }} VNĐ</p>
                                     </div>
                                 </div>
                             </div>
@@ -502,7 +556,7 @@
                                 <div class="text-center mt-4">
                                     <a href="{{ route('payment.show-all', ['ids' => implode(',', $unpaidViolationIds)]) }}"
                                         class="btn btn-pay-all">
-                                        <i class="fas fa-money-bill-wave me-2"></i> Thanh toán tất cả
+                                        <i class="bi bi-credit-card-fill me-2"></i> Thanh toán tất cả
                                         ({{ number_format($totalUnpaidAmount) }} VNĐ)
                                     </a>
                                 </div>
@@ -510,7 +564,7 @@
                         @else
                             <div class="empty-state">
                                 <div class="empty-state-icon">
-                                    <i class="fas fa-check-circle"></i>
+                                    <i class="bi bi-check-circle-fill"></i>
                                 </div>
                                 <p class="empty-state-text">Phương tiện này không có vi phạm nào.</p>
                             </div>
@@ -524,12 +578,12 @@
             <div class="col-md-10">
                 <div class="result-container">
                     <div class="result-header">
-                        <h5><i class="fas fa-search me-2"></i> Kết quả tra cứu</h5>
+                        <h5><i class="bi bi-search me-2"></i> Kết quả tra cứu</h5>
                     </div>
                     <div class="result-body">
                         <div class="empty-state">
                             <div class="empty-state-icon">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="bi bi-exclamation-triangle-fill"></i>
                             </div>
                             <p class="empty-state-text">Không tìm thấy phương tiện nào với biển số: <strong>{{ $licensePlate }}</strong></p>
                             <p class="mt-3 text-muted">Vui lòng kiểm tra lại biển số và thử lại.</p>
@@ -542,8 +596,36 @@
 @endsection
 
 @section('scripts')
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // Ngăn ngừa hiệu ứng nhảy 
+        document.addEventListener('DOMContentLoaded', function() {
+            // Đảm bảo các container có kích thước ổn định
+            const containers = document.querySelectorAll('.result-container, .search-container');
+            containers.forEach(container => {
+                // Lưu chiều cao ban đầu
+                const height = container.offsetHeight;
+                // Đặt chiều cao tối thiểu
+                container.style.minHeight = height + 'px';
+            });
+            
+            // Xử lý modal
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('show.bs.modal', function () {
+                    document.body.style.overflow = 'hidden';
+                    document.body.classList.add('modal-open');
+                });
+                
+                modal.addEventListener('hidden.bs.modal', function () {
+                    const openModals = document.querySelectorAll('.modal.show');
+                    if (openModals.length === 0) {
+                        document.body.style.overflow = '';
+                        document.body.classList.remove('modal-open');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
 
 <!-- Chatbot -->
