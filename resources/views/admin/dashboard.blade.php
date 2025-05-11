@@ -52,7 +52,7 @@
     <div class="row">
         <!-- Violation Types Chart -->
         <div class="col-md-6 mb-4">
-            <div class="card-admin">
+            <div class="card-admin h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>Thống kê theo loại vi phạm</span>
                 </div>
@@ -66,7 +66,7 @@
         
         <!-- Recent Violations -->
         <div class="col-md-6 mb-4">
-            <div class="card-admin">
+            <div class="card-admin h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>Vi phạm gần đây</span>
                     <a href="{{ route('admin.violations') }}" class="btn btn-sm btn-admin-primary">Xem tất cả</a>

@@ -259,6 +259,116 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             border-top: 1px solid #eee;
         }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                overflow: hidden;
+            }
+
+            .sidebar .nav-link span {
+                display: none;
+            }
+
+            .sidebar-header h4 {
+                display: none;
+            }
+
+            .content {
+                margin-left: 60px;
+            }
+
+            .admin-footer {
+                margin-left: 60px;
+            }
+
+            .sidebar .nav-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            /* Hiển thị tooltip khi hover trên menu */
+            .sidebar .nav-link {
+                position: relative;
+            }
+
+            .sidebar .nav-link:hover:before {
+                content: attr(data-title);
+                position: absolute;
+                left: 100%;
+                top: 0;
+                background: #004494;
+                padding: 5px 10px;
+                border-radius: 3px;
+                white-space: nowrap;
+                z-index: 1001;
+            }
+            
+            .card-header {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .stats-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Media query cho màn hình rất nhỏ */
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 0;
+                position: fixed;
+                transform: translateX(-250px);
+            }
+
+            .sidebar.show {
+                width: 250px;
+                transform: translateX(0);
+            }
+            
+            .sidebar.show .nav-link span {
+                display: inline-block;
+            }
+
+            .content,
+            .admin-footer {
+                margin-left: 0;
+            }
+
+            .navbar-admin .toggle-sidebar {
+                display: block !important;
+            }
+            
+            .navbar-admin h4 {
+                font-size: 1.2rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            
+            .card-header a {
+                margin-top: 10px;
+            }
+            
+            .d-flex.gap-2 {
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Ẩn nút toggle-sidebar mặc định */
+        .toggle-sidebar {
+            display: none;
+        }
+        
+        /* Thêm khoảng cách giữa các nút */
+        .d-flex.gap-2 {
+            gap: 0.5rem !important;
+        }
     </style>
 
     @yield('styles')
@@ -275,36 +385,35 @@
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.dashboard') ? 'active' : '' }}"
                     href="{{ route('admin.dashboard') }}">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                    <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.owners*') ? 'active' : '' }}" href="{{ route('admin.owners') }}">
-                    <i class="fas fa-user"></i> Chủ Phương Tiện
+                    <i class="fas fa-user"></i> <span>Chủ Phương Tiện</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.vehicles*') ? 'active' : '' }}"
                     href="{{ route('admin.vehicles') }}">
-                    <i class="fas fa-car"></i> Phương Tiện
+                    <i class="fas fa-car"></i> <span>Phương Tiện</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Route::is('admin.violations*') ? 'active' : '' }}"
                     href="{{ route('admin.violations') }}">
-                    <i class="fas fa-exclamation-triangle"></i> Vi Phạm
+                    <i class="fas fa-exclamation-triangle"></i> <span>Vi Phạm</span>
                 </a>
             </li>
             <li class="nav-item {{ request()->routeIs('admin.traffic-situations.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.traffic-situations.index') }}">
-                    <i class="fas fa-road"></i>
-                    <span>Tình Hình Giao Thông</span>
+                    <i class="fas fa-road"></i> <span>Tình Hình Giao Thông</span>
                 </a>
             </li>
             @if(Auth::guard('admin')->user()->role == 'super_admin')
                 <li class="nav-item">
                     <a class="nav-link {{ Route::is('admin.admins*') ? 'active' : '' }}" href="{{ route('admin.admins') }}">
-                        <i class="fas fa-users-cog"></i> Quản Lý Admin
+                        <i class="fas fa-users-cog"></i> <span>Quản Lý Admin</span>
                     </a>
                 </li>
             @endif
@@ -312,7 +421,7 @@
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="nav-link border-0 bg-transparent">
-                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        <i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span>
                     </button>
                 </form>
             </li>
@@ -325,6 +434,9 @@
         <div class="navbar-admin">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
+                    <button class="toggle-sidebar btn btn-sm btn-light d-md-none me-2">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <h4 class="mb-0">@yield('page-title', 'Dashboard')</h4>
                 </div>
                 <div>
@@ -381,6 +493,77 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+    </script>
+    <script>
+        // Script mặc định của bạn
+
+        // Thêm đoạn code này để xử lý toggle sidebar
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.querySelector('.toggle-sidebar');
+            const sidebar = document.querySelector('.sidebar');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                    sidebar.classList.toggle('show');
+                });
+            }
+
+            // Đóng sidebar khi click ra ngoài (trên màn hình nhỏ)
+            document.addEventListener('click', function (event) {
+                if (window.innerWidth <= 576) {
+                    const isClickInsideSidebar = sidebar.contains(event.target);
+                    const isClickInsideToggleBtn = toggleBtn && toggleBtn.contains(event.target);
+
+                    if (!isClickInsideSidebar && !isClickInsideToggleBtn && sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+                    }
+                }
+            });
+
+            // Thêm data-title cho các menu item
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(function (link) {
+                const text = link.textContent.trim();
+                link.setAttribute('data-title', text);
+            });
+            
+            // Cập nhật lại chiều cao của các card trong dòng flex để chúng bằng nhau
+            function updateCardHeights() {
+                const rows = document.querySelectorAll('.row');
+                rows.forEach(row => {
+                    if (window.innerWidth >= 992) {
+                        const cards = row.querySelectorAll('.card-admin');
+                        let maxHeight = 0;
+                        
+                        // Reset heights
+                        cards.forEach(card => {
+                            card.style.height = 'auto';
+                            const height = card.offsetHeight;
+                            maxHeight = Math.max(maxHeight, height);
+                        });
+                        
+                        // Set all cards to max height
+                        if (cards.length > 1) {
+                            cards.forEach(card => {
+                                card.style.height = maxHeight + 'px';
+                            });
+                        }
+                    } else {
+                        // Reset heights on smaller screens
+                        const cards = row.querySelectorAll('.card-admin');
+                        cards.forEach(card => {
+                            card.style.height = 'auto';
+                        });
+                    }
+                });
+            }
+            
+            // Run on load
+            updateCardHeights();
+            
+            // Run on window resize
+            window.addEventListener('resize', updateCardHeights);
         });
     </script>
     @yield('scripts')

@@ -26,7 +26,7 @@
       <table class="table table-admin">
       <thead>
         <tr>
-        <th>#</th>
+        <th>STT</th>
         <th>Biển số xe</th>
         <th>Chủ phương tiện</th>
         <th>Ngày vi phạm</th>
@@ -39,7 +39,7 @@
       <tbody id="violations-table-body">
         @foreach($violations as $violation)
       <tr>
-      <td>{{ $violation->id }}</td>
+      <td>{{ $loop->iteration }}</td>
       <td>{{ $violation->vehicle->license_plate }}</td>
       <td>{{ $violation->vehicle->owner->name }}</td>
       <td>{{ \Carbon\Carbon::parse($violation->violation_date)->format('d/m/Y') }}</td>

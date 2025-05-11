@@ -17,7 +17,7 @@
                 <table class="table table-admin">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>STT</th>
                             <th>Biển số xe</th>
                             <th>Loại xe</th>
                             <th>Hãng xe</th>
@@ -30,7 +30,7 @@
                     <tbody>
                         @foreach($vehicles as $vehicle)
                         <tr>
-                            <td>{{ $vehicle->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $vehicle->license_plate }}</td>
                             <td>{{ $vehicle->type }}</td>
                             <td>{{ $vehicle->brand }}</td>

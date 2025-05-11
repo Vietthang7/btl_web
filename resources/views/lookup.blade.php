@@ -145,10 +145,10 @@
                                             <td>{{ $violation->location }}</td>
                                             <td>{{ number_format($violation->fine_amount) }} VNĐ</td>
                                             <td>
-                                                @if($violation->payment_status == 'Unpaid')
-                                                    <span class="badge bg-danger">Chưa thanh toán</span>
-                                                @else
+                                                @if($violation->payment_status == 'Paid')
                                                     <span class="badge bg-success">Đã thanh toán</span>
+                                                @else
+                                                    <span class="badge bg-danger ">Chưa thanh toán</span>
                                                 @endif
                                             </td>
                                             <td>

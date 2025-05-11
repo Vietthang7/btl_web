@@ -17,7 +17,7 @@
                 <table class="table table-admin">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>STT</th>
                             <th>Tên</th>
                             <th>Email</th>
                             <th>Số điện thoại</th>
@@ -29,7 +29,7 @@
                     <tbody>
                         @foreach($owners as $owner)
                         <tr>
-                            <td>{{ $owner->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $owner->name }}</td>
                             <td>{{ $owner->email }}</td>
                             <td>{{ $owner->phone }}</td>
