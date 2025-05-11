@@ -220,37 +220,37 @@ class AdminController extends Controller
   }
 
   public function updateViolation(Request $request, $id)
-{
+  {
     $violation = Violation::findOrFail($id);
-    
+
     $validated = $request->validate([
-        'vehicle_id' => 'required|exists:vehicles,id',
-        'violation_date' => 'required|date',
-        'violation_type' => 'required|string|max:255',
-        'fine_amount' => 'required|numeric|min:0',
-        'location' => 'required|string|max:255',
-        'payment_status' => 'required|in:Paid,Unpaid',
-        'payment_method' => 'nullable|string|max:50',
-        'evidence_image' => 'nullable|image|max:2048', // Thêm validation cho ảnh
+      'vehicle_id' => 'required|exists:vehicles,id',
+      'violation_date' => 'required|date',
+      'violation_type' => 'required|string|max:255',
+      'fine_amount' => 'required|numeric|min:0',
+      'location' => 'required|string|max:255',
+      'payment_status' => 'required|in:Paid,Unpaid',
+      'payment_method' => 'nullable|string|max:50',
+      'evidence_image' => 'nullable|image|max:2048', // Thêm validation cho ảnh
     ]);
 
     // Xử lý upload ảnh
     if ($request->hasFile('evidence_image')) {
-        // Xóa ảnh cũ nếu có
-        if ($violation->evidence_image && file_exists(public_path($violation->evidence_image))) {
-            unlink(public_path($violation->evidence_image));
-        }
+      // Xóa ảnh cũ nếu có
+      if ($violation->evidence_image && file_exists(public_path($violation->evidence_image))) {
+        unlink(public_path($violation->evidence_image));
+      }
 
-        // Upload ảnh mới
-        $image = $request->file('evidence_image');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('uploads/violations'), $imageName);
-        $validated['evidence_image'] = 'uploads/violations/' . $imageName;
+      // Upload ảnh mới
+      $image = $request->file('evidence_image');
+      $imageName = time() . '_' . $image->getClientOriginalName();
+      $image->move(public_path('uploads/violations'), $imageName);
+      $validated['evidence_image'] = 'uploads/violations/' . $imageName;
     }
 
     $violation->update($validated);
     return redirect()->route('admin.violations')->with('success', 'Cập nhật vi phạm thành công.');
-}
+  }
 
   public function deleteViolation($id)
   {
@@ -354,5 +354,22 @@ class AdminController extends Controller
 
     $admin->delete();
     return redirect()->route('admin.admins')->with('success', 'Xóa admin thành công.');
+  }
+  public function updatePaymentStatus(Request $request, $id)
+  {
+    $violation = \App\Models\Violation::findOrFail($id);
+
+    $request->validate([
+      'payment_status' => 'required|in:Paid,Unpaid',
+      'payment_method' => 'required_if:payment_status,Paid',
+    ]);
+
+    $violation->update([
+      'payment_status' => $request->payment_status,
+      'payment_method' => $request->payment_method,
+    ]);
+
+    return redirect()->back()
+      ->with('success', 'Cập nhật trạng thái thanh toán thành công!');
   }
 }

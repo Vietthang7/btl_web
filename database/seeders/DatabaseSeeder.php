@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
         // Chạy AdminSeeder
         $this->call(AdminSeeder::class);
         
+        // Chạy TrafficSituationSeeder
+        $this->call(TrafficSituationSeeder::class);
+        
         // Kiểm tra nếu chưa có dữ liệu trong bảng owners
         if (Owner::count() == 0) {
             // Owners

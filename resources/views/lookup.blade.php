@@ -140,10 +140,10 @@
                                             <td>{{ $violation->location }}</td>
                                             <td>{{ number_format($violation->fine_amount) }} VNĐ</td>
                                             <td>
-                                                @if($violation->payment_status == 'Paid')
-                                                    <span class="badge bg-success">Đã thanh toán</span>
+                                                @if($violation->payment_status == 'Unpaid')
+                                                    <a href="{{ route('payment.show', $violation->id) }}" class="btn btn-danger">Chưa thanh toán (Thanh toán ngay)</a>
                                                 @else
-                                                    <span class="badge bg-danger">Chưa thanh toán</span>
+                                                    <span class="btn btn-success">Đã thanh toán</span>
                                                 @endif
                                             </td>
                                             <td>
@@ -201,3 +201,11 @@
         </div>
     @endif
 @endsection
+
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="Hỗ_trợ_người_dùng"
+  agent-id="e9e2ddfe-471d-4b3a-8562-3339780d54d1"
+  language-code="vi"
+></df-messenger>

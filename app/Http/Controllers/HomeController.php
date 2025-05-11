@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Vehicle;
+use App\Models\Violation;
+use Illuminate\Support\Facades\DB;
+use App\Models\TrafficSituation;
 class HomeController extends Controller
 {
     public function index()
@@ -56,24 +59,20 @@ class HomeController extends Controller
             ],
         ];
 
-        $trafficSituations = [
-            ['location' => 'Đường Nguyễn Trãi, Hà Nội', 'status' => 'Ùn tắc nghiêm trọng do tai nạn lúc 7:00 sáng.'],
-            ['location' => 'Cầu Sài Gòn, TP.HCM', 'status' => 'Giao thông thông thoáng, không có sự cố.'],
-            ['location' => 'Đường Hùng Vương, Đà Nẵng', 'status' => 'Tắc nghẽn nhẹ do công trình sửa đường.'],
-        ];
+        $trafficSituations = TrafficSituation::latest('updated_at')->take(10)->get();
 
         $faqs = [
             [
                 'question' => 'Làm thế nào để tra cứu vi phạm giao thông?',
-                'answer' => 'Bạn chỉ cần nhập biển số xe vào ô tra cứu trên trang web, sau đó nhấn nút "Tra cứu". Hệ thống sẽ hiển thị thông tin vi phạm (nếu có) của phương tiện.',
+                'answer' => 'Bạn chỉ cần nhập biển số xe vào ô tra cứu trên trang web, sau đó nhấn nút "Tra cứu". Hệ thống sẽ hiển thị thông tin vi phạm (nếu có).',
             ],
             [
                 'question' => 'Tôi có thể tra cứu vi phạm của xe không phải của mình không?',
-                'answer' => 'Bạn có thể tra cứu vi phạm của bất kỳ phương tiện nào, miễn là bạn có thông tin biển số xe. Tuy nhiên, thông tin chi tiết như chủ phương tiện sẽ được bảo mật theo quy định.',
+                'answer' => 'Bạn có thể tra cứu vi phạm của bất kỳ phương tiện nào, miễn là bạn có thông tin biển số xe. Tuy nhiên, thông tin chi tiết như chủ xe sẽ không được hiển thị vì lý do bảo mật.',
             ],
             [
                 'question' => 'Làm sao để nộp phạt vi phạm giao thông?',
-                'answer' => 'Sau khi tra cứu, bạn sẽ nhận được thông tin về vi phạm và mức phạt. Bạn có thể nộp phạt trực tiếp tại cơ quan giao thông hoặc qua các cổng thanh toán trực tuyến được liên kết.',
+                'answer' => 'Sau khi tra cứu, bạn sẽ nhận được thông tin về vi phạm và mức phạt. Bạn có thể nộp phạt trực tiếp tại cơ quan giao thông hoặc thông qua các ngân hàng được liệt kê.',
             ],
             [
                 'question' => 'Dữ liệu vi phạm có được cập nhật thường xuyên không?',
@@ -81,6 +80,79 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('home', compact('news', 'trafficSituations', 'faqs'));
+        // 1. Lấy loại xe vi phạm nhiều nhất
+        $mostViolatedVehicleType = DB::table('vehicles')
+            ->join('violations', 'vehicles.id', '=', 'violations.vehicle_id')
+            ->select('vehicles.type', DB::raw('COUNT(*) as violation_count'))
+            ->groupBy('vehicles.type')
+            ->orderByDesc('violation_count')
+            ->first();
+
+        // 2. Lấy top 3 lỗi vi phạm phổ biến nhất
+        $topViolationTypes = DB::table('violations')
+            ->select('violation_type', DB::raw('COUNT(*) as count'))
+            ->groupBy('violation_type')
+            ->orderByDesc('count')
+            ->limit(3)
+            ->get();
+
+        // 3. Thống kê số lượng vi phạm theo tháng trong năm hiện tại
+        $monthlyViolations = DB::table('violations')
+            ->select(DB::raw('MONTH(violation_date) as month'), DB::raw('COUNT(*) as count'))
+            ->whereYear('violation_date', date('Y'))
+            ->groupBy(DB::raw('MONTH(violation_date)'))
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Chuẩn bị dữ liệu cho biểu đồ
+        $months = [
+            'Tháng 1',
+            'Tháng 2',
+            'Tháng 3',
+            'Tháng 4',
+            'Tháng 5',
+            'Tháng 6',
+            'Tháng 7',
+            'Tháng 8',
+            'Tháng 9',
+            'Tháng 10',
+            'Tháng 11',
+            'Tháng 12'
+        ];
+        $violationCounts = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $violationCounts[] = $monthlyViolations[$i] ?? 0;
+        }
+
+        // 4. Thống kê tỷ lệ vi phạm đã thanh toán/chưa thanh toán
+        $paymentStatus = DB::table('violations')
+            ->select('payment_status', DB::raw('COUNT(*) as count'))
+            ->groupBy('payment_status')
+            ->pluck('count', 'payment_status')
+            ->toArray();
+
+        $paidCount = $paymentStatus['paid'] ?? 0;
+        $unpaidCount = $paymentStatus['unpaid'] ?? 0;
+        $totalViolations = $paidCount + $unpaidCount;
+
+        $paidPercentage = $totalViolations > 0 ? round(($paidCount / $totalViolations) * 100, 1) : 0;
+        $unpaidPercentage = $totalViolations > 0 ? round(($unpaidCount / $totalViolations) * 100, 1) : 0;
+
+        return view('home', compact(
+            'news',
+            'trafficSituations',
+            'faqs',
+            'mostViolatedVehicleType',
+            'topViolationTypes',
+            'months',
+            'violationCounts',
+            'paidPercentage',
+            'unpaidPercentage',
+            'paidCount',
+            'unpaidCount'
+        ));
     }
 }
