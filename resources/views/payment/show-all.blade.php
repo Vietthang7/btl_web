@@ -202,7 +202,7 @@
     </div>
 
     <div class="payment-buttons">
-      <form action="{{ route('home') }}" method="POST">
+      <form action="{{ route('payment.confirm-all') }}" method="POST">
         @csrf
         <input type="hidden" name="ids" value="{{ $ids }}">
         <button type="submit" class="btn btn-primary">Đã thanh toán</button>

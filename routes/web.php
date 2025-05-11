@@ -5,7 +5,22 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ViolationController;
 use App\Http\Controllers\Admin\TrafficSituationController;
 use App\Http\Controllers\PaymentController;
-// Thêm đoạn code sau vào file routes/web.php
+use App\Http\Controllers\HomeController;
+
+// Route trang chủ
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Routes tra cứu vi phạm
+Route::get('/lookup', [ViolationController::class, 'lookup'])->name('lookup');
+Route::post('/lookup', [ViolationController::class, 'lookupResult'])->name('lookup.post');
+
+// Routes cho thanh toán - đưa ra ngoài middleware admin
+// Route::get('/payment/{id}', [PaymentController::class, 'showPayment'])->name('payment.show');
+// Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
+
+// Routes cho thanh toán tất cả vi phạm - đưa ra ngoài middleware admin
+Route::get('/payment/all/{ids}', [PaymentController::class, 'showPaymentAll'])->name('payment.show-all');
+Route::post('/payment/all/confirm', [PaymentController::class, 'confirmPaymentAll'])->name('payment.confirm-all');
 
 // Admin routes
 Route::prefix('admin')->group(function () {
@@ -65,12 +80,5 @@ Route::prefix('admin')->group(function () {
         ]);
         Route::put('/violations/{id}/payment-status', [AdminController::class, 'updatePaymentStatus'])
             ->name('admin.violations.payment-status');
-        // Routes cho thanh toán
-        Route::get('/payment/{id}', [PaymentController::class, 'showPayment'])->name('payment.show');
-        Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
-
-        // Routes cho thanh toán tất cả vi phạm
-        Route::get('/payment/all/{ids}', [App\Http\Controllers\PaymentController::class, 'showPaymentAll'])->name('payment.show-all');
-        Route::post('/payment/all/confirm', [App\Http\Controllers\PaymentController::class, 'confirmPaymentAll'])->name('payment.confirm-all');
     });
 });

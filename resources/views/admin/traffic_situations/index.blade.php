@@ -44,13 +44,13 @@
                                     <td>{{ $situation->updated_at->format('d/m/Y H:i') }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <a href="{{ route('admin.traffic-situations.edit', $situation) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ route('admin.traffic-situations.edit', $situation) }}" class="btn btn-sm btn-primary ml-3">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form action="{{ route('admin.traffic-situations.destroy', $situation) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                <button type="submit" class="btn btn-sm btn-danger ml-3">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
