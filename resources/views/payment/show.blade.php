@@ -163,8 +163,17 @@
 <script>
     // Tạo QR code khi trang đã load
     document.addEventListener('DOMContentLoaded', function() {
+        // Tạo nội dung chuỗi QR theo định dạng VietQR
+        const bankCode = "VCB"; // Mã ngân hàng VietComBank
+        const accountNumber = "{{ $paymentInfo['bankAccount'] }}";
+        const amount = "{{ $violation->fine_amount }}";
+        const description = "{{ $paymentInfo['description'] }}";
+        
+        // Format theo chuẩn VNPay QR: bankCode|accountNumber|amount|description
+        const qrContent = `${bankCode}|${accountNumber}|${amount}|${description}`;
+        
         new QRCode(document.getElementById("qrcode"), {
-            text: "Chuyen khoan {{ $violation->fine_amount }}VND STK {{ $paymentInfo['bankAccount'] }} NH {{ $paymentInfo['bankName'] }} ND {{ $paymentInfo['description'] }}",
+            text: qrContent,
             width: 240,
             height: 240,
             colorDark: "#000000",
@@ -173,4 +182,3 @@
         });
     });
 </script>
-@endsection

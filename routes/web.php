@@ -68,5 +68,9 @@ Route::prefix('admin')->group(function () {
         // Routes cho thanh toán
         Route::get('/payment/{id}', [PaymentController::class, 'showPayment'])->name('payment.show');
         Route::post('/payment/{id}/confirm', [PaymentController::class, 'confirmPayment'])->name('payment.confirm');
+
+        // Routes cho thanh toán tất cả vi phạm
+        Route::get('/payment/all/{ids}', [App\Http\Controllers\PaymentController::class, 'showPaymentAll'])->name('payment.show-all');
+        Route::post('/payment/all/confirm', [App\Http\Controllers\PaymentController::class, 'confirmPaymentAll'])->name('payment.confirm-all');
     });
 });
