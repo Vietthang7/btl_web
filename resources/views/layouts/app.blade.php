@@ -5,153 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Hệ thống tra cứu vi phạm giao thông')</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #00aaff;
+            --light-blue: #d1e8ff;
+            --dark-blue: #004494;
+            --text-color: #333333;
+            --bg-color: #f0f7ff;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
         body {
-            background-color: #e6f0fa;
-            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
         }
+        
+        /* Navbar Styling */
         .navbar {
-            background-color: #0056b3;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
         }
+        
         .navbar-brand img {
-            height: 40px;
+            height: 45px;
+            transition: transform 0.3s ease;
         }
+        
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+        
         .navbar-nav .nav-link {
             color: white !important;
             position: relative;
             transition: all 0.3s ease;
-            padding: 8px 15px;
+            padding: 10px 18px;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 0 5px;
         }
+        
         .navbar-nav .nav-link:hover {
-            color: #d1e8ff !important;
-            transform: scale(1.1);
+            color: var(--light-blue) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+        
         .navbar-nav .nav-link::after {
             content: '';
             position: absolute;
             width: 0;
-            height: 2px;
-            background-color: #d1e8ff;
+            height: 3px;
+            background-color: var(--light-blue);
             bottom: 0;
             left: 0;
             transition: width 0.3s ease;
         }
+        
         .navbar-nav .nav-link:hover::after {
             width: 100%;
         }
+        
         .navbar-nav .nav-link.active {
-            background-color: #d1e8ff;
-            color: #0056b3 !important;
-            border-radius: 5px;
-        }
-        .footer {
-            color: #0056b3;
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px 0;
-        }
-        /* CSS chung cho các nút và card */
-        .btn-lookup, .btn-search, .btn-detail {
-            border: none;
+            background-color: white;
+            color: var(--primary-color) !important;
             border-radius: 8px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .btn-lookup {
-            background: #ffffff;
-            color: #0056b3;
-            padding: 12px 30px;
-        }
-        .btn-lookup:hover {
-            background: #d1e8ff;
-            transform: scale(1.05);
-            color:black;
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4);
-        }
-        .btn-search {
-            background: linear-gradient(90deg, #0056b3, #00aaff);
-            color: white;
-            padding: 12px;
-            width: 100%;
-        }
-        .btn-search:hover {
-            background: linear-gradient(90deg, #004494, #0088cc);
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4);
-        }
-        .btn-detail {
-            background: linear-gradient(90deg, #0056b3, #00aaff);
-            color: white;
-            padding: 8px 20px;
-        }
-        .btn-detail:hover {
-            background: linear-gradient(90deg, #004494, #0088cc);
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4);
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        /* Banner style */
-        .banner {
-            background: linear-gradient(90deg, #0056b3, #00aaff);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            margin-top: 20px;
-        }
-        .banner h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .banner p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
         
-        /* Thêm style cho alert messages */
-        .alert-success {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
+        /* Footer Styling */
+        .footer {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 0;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .footer p {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        
+        /* Button Styling */
+        .btn {
+            transition: all 0.3s ease;
+            font-weight: 600;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease;
+            padding: 10px 25px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(90deg, var(--dark-blue), var(--primary-color));
+        }
+        
+        /* Card Styling */
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Alert Styling */
+        .alert {
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            animation: slideInDown 0.5s ease-in-out;
+        }
+        
+        .alert-success {
+            background: linear-gradient(to right, #28a745, #5cb85c);
+            color: white;
         }
         
         .alert-danger {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease;
+            background: linear-gradient(to right, #dc3545, #f86b7c);
+            color: white;
+        }
+        
+        .alert i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-close {
+            margin-left: auto;
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn-close:hover {
+            opacity: 1;
+        }
+        
+        /* Animation Keyframes */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         
-        @yield('styles')
+        /* Chatbot styling */
+        df-messenger {
+            --df-messenger-bot-message: var(--primary-color);
+            --df-messenger-button-titlebar-color: var(--primary-color);
+            --df-messenger-chat-background-color: #fafafa;
+            --df-messenger-font-color: white;
+            --df-messenger-send-icon: var(--primary-color);
+            --df-messenger-user-message: var(--secondary-color);
+            z-index: 999 !important;
+        }
     </style>
+    
+    @yield('styles')
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('assets/img/dcsvn.jpg') }}" alt="Traffic Logo">
@@ -162,16 +221,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a>
+                        <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                            <i class="fas fa-home me-1"></i> Trang chủ
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ Route::is('lookup') ? 'active' : '' }}" href="{{ route('lookup') }}">Tra cứu</a>
+                        <a class="nav-link {{ Route::is('lookup') ? 'active' : '' }}" href="{{ route('lookup') }}">
+                            <i class="fas fa-search me-1"></i> Tra cứu
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Hướng dẫn</a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-info-circle me-1"></i> Hướng dẫn
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Liên hệ</a>
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-phone-alt me-1"></i> Liên hệ
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -180,17 +247,17 @@
 
     <!-- Content -->
     <div class="container">
-        <!-- Thêm phần hiển thị thông báo ở đây -->
+        <!-- Alert Messages -->
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+            <div class="alert alert-success alert-dismissible fade show mt-4 animate__animated animate__slideInDown" role="alert">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+            <div class="alert alert-danger alert-dismissible fade show mt-4 animate__animated animate__slideInDown" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -199,16 +266,17 @@
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-        <p>© 2025 - Hệ thống tra cứu vi phạm giao thông. All rights reserved.</p>
+    <div class="container">
+        <footer class="footer">
+            <p>© 2025 - Hệ thống tra cứu vi phạm giao thông | Phát triển bởi VietThang7</p>
+        </footer>
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Thêm script để tự động ẩn thông báo sau 5 giây -->
+    <!-- Auto-hide alerts script -->
     <script>
-        // Auto-hide alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 var alerts = document.querySelectorAll('.alert');
