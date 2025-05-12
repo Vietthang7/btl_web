@@ -88,18 +88,249 @@
         }
 
         /* Footer Styling */
-        .footer {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        /* Footer Styling - Phiên bản nâng cao */
+        .footer-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            text-align: center;
             margin-top: 60px;
-            padding: 30px 0;
             border-radius: 16px 16px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .footer p {
+        .footer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/assets/img/pattern-bg.png');
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .footer-content {
+            position: relative;
+            padding: 50px 0 30px;
+            z-index: 1;
+        }
+
+        .footer-brand {
+            margin-bottom: 20px;
+        }
+
+        .footer-logo {
+            height: 50px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo:hover {
+            transform: translateY(-3px);
+        }
+
+        .footer-brand h4 {
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+
+        .footer-desc {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            background-color: white;
+            color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-heading {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: white;
+            border-radius: 3px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-links li a i {
+            margin-right: 10px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-links li a:hover i {
+            transform: translateX(3px);
+        }
+
+        .footer-contact {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-contact li {
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-contact li i {
+            min-width: 30px;
+            color: white;
+            margin-right: 10px;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-contact li:hover i {
+            transform: scale(1.2);
+        }
+
+        .footer-app-text {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+
+        .footer-app-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .app-badge {
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .app-badge img {
+            height: 40px;
+            border-radius: 6px;
+        }
+
+        .app-badge:hover {
+            transform: translateY(-3px);
+        }
+
+        .footer-copyright {
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .footer-copyright p {
             margin-bottom: 0;
-            font-weight: 500;
+        }
+
+        .footer-copyright a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-copyright a:hover {
+            opacity: 0.8;
+        }
+
+        .current-time {
+            opacity: 0.8;
+        }
+
+        /* Hiệu ứng chuyển động cho footer */
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 992px) {
+            .footer-content {
+                padding: 40px 0 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-heading {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-copyright {
+                text-align: center;
+            }
+
+            .footer-copyright .text-md-start,
+            .footer-copyright .text-md-end {
+                text-align: center !important;
+            }
         }
 
         /* Button Styling */
@@ -275,10 +506,79 @@
     </div>
 
     <!-- Footer -->
-    <div class="container">
-        <footer class="footer">
-            <p>© 2025 - Hệ thống tra cứu vi phạm giao thông | Phát triển bởi VietThang7</p>
-        </footer>
+    <div class="footer-section">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row">
+                    <!-- Logo & Thông tin -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="100">
+                        <div class="footer-brand">
+                            <img src="{{ asset('assets/img/dcsvn.jpg') }}" alt="Traffic Logo" class="footer-logo">
+                            <h4>Tra cứu vi phạm giao thông</h4>
+                        </div>
+                        <p class="footer-desc">
+                            Hệ thống tra cứu vi phạm giao thông trực tuyến chính thức của Cục Cảnh sát giao thông Việt
+                            Nam
+                        </p>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/obito12" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.facebook.com/obito12" class="social-icon"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.facebook.com/obito12" class="social-icon"><i class="fab fa-youtube"></i></a>
+                            <a href="https://www.facebook.com/obito12" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Liên kết nhanh -->
+                    <div class="col-lg-2 col-md-6 col-sm-6 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="200">
+                        <h5 class="footer-heading">Liên kết</h5>
+                        <ul class="footer-links">
+                            <li><a href="{{ route('home') }}"><i class="fas fa-angle-right"></i> Trang chủ</a></li>
+                            <li><a href="{{ route('lookup') }}"><i class="fas fa-angle-right"></i> Tra cứu</a></li>
+                            <li><a href="#"><i class="fas fa-angle-right"></i> Tin tức</a></li>
+                            <li><a href="#"><i class="fas fa-angle-right"></i> Hướng dẫn</a></li>
+                            <li><a href="#"><i class="fas fa-angle-right"></i> Liên hệ</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Liên hệ -->
+                    <div class="col-lg-3 col-md-6 col-sm-6 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="300">
+                        <h5 class="footer-heading">Liên hệ</h5>
+                        <ul class="footer-contact">
+                            <li><i class="fas fa-map-marker-alt"></i>245/120 Định Công, Hà Nội</li>
+                            <li><i class="fas fa-phone-alt"></i> 1900 9208</li>
+                            <li><i class="fas fa-envelope"></i> hotro@csgt.gov.vn</li>
+                            <li><i class="fas fa-clock"></i> Thứ 2 - Thứ 6: 8:00 - 17:00</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tải ứng dụng -->
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="400">
+                        <h5 class="footer-heading">Tải ứng dụng</h5>
+                        <p class="footer-app-text">Tra cứu vi phạm nhanh chóng qua ứng dụng di động</p>
+                        <div class="footer-app-badges">
+                            <a href="#" class="app-badge">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/2560px-Google_Play_Store_badge_EN.svg.png" alt="Google Play">
+                            </a>
+                            <a href="#" class="app-badge">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png" alt="App Store">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer-copyright">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p>&copy; 2025 - Hệ thống tra cứu vi phạm giao thông</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <p>Phát triển bởi <a href="https://github.com/Vietthang7" target="_blank">Nguyễn Viết Thắng</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
